@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 260" role="img" aria-label="Swarag Video Director">
+<rect width="960" height="260" rx="24" fill="#121820"/>
+<path d="M64 66h120v128H64z" fill="none" stroke="#d5b777" stroke-width="3"/>
+<path d="m101 99 49 31-49 31z" fill="#d5b777"/>
+<text x="225" y="120" fill="#f5f2eb" font-family="Arial,sans-serif" font-size="46" font-weight="700">SWARAG</text>
+<text x="227" y="166" fill="#c6cbd1" font-family="Arial,sans-serif" font-size="25" letter-spacing="4">VIDEO DIRECTOR</text>
+<text x="228" y="207" fill="#d5b777" font-family="Arial,sans-serif" font-size="17">Swarag Ravikumar · @aiwithSwarag</text>
+</svg>
