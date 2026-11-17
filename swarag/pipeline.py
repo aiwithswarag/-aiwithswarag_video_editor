@@ -93,7 +93,7 @@ def prepare(source, destination, info, keeps, width, fps, grade):
     args = ["-y", "-i", source, "-filter_complex", ";".join(graph), "-map", "[vout]"]
     if info["audio"]: args += ["-map", "[aout]", "-c:a", "pcm_s24le"]
     # Lossless H.264 intermediate avoids repeated lossy encodes of camera footage.
-    args += ["-c:v", "libx264", "-crf", "0", "-preset", "ultrafast", "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", destination]
+    args += ["-c:v", "libx264", "-crf", "0", "-preset", "ultrafast", "-pix_fmt", "yuv420p", "-x264-params", "colorprim=bt709:transfer=bt709:colormatrix=bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", destination]
     ffmpeg(args)
 
 
@@ -183,7 +183,7 @@ def edit(plan, *, overwrite=False):
         args += ["-map", "0:v:0"]
         if has_audio: args += ["-map", "1:a:0", "-c:a", "aac", "-b:a", "192k"]
         if filters: args += ["-vf", ",".join(filters)]
-        args += ["-c:v", "libx264", "-crf", "17", "-preset", "medium", "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-t", str(duration), "-movflags", "+faststart", work/"master.mp4"]
+        args += ["-c:v", "libx264", "-crf", "17", "-preset", "medium", "-pix_fmt", "yuv420p", "-x264-params", "colorprim=bt709:transfer=bt709:colormatrix=bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-t", str(duration), "-movflags", "+faststart", work/"master.mp4"]
         print("Encoding and verifying the master", flush=True)
         ffmpeg(args, cwd=work)
         reports = [verify_video(work/"master.mp4", expected_duration=duration, expected_audio=has_audio)]
@@ -193,7 +193,7 @@ def edit(plan, *, overwrite=False):
             target = work/f"{profile}.mp4"
             # Fit rather than crop: the speaker and graphics remain intact.
             vf = f"scale={w}:{h}:force_original_aspect_ratio=decrease:force_divisible_by=2,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2:color=0x121820,setsar=1"
-            ffmpeg(["-y", "-i", work/"master.mp4", "-vf", vf, "-c:v", "libx264", "-crf", "18", "-preset", "medium", "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", target])
+            ffmpeg(["-y", "-i", work/"master.mp4", "-vf", vf, "-c:v", "libx264", "-crf", "18", "-preset", "medium", "-pix_fmt", "yuv420p", "-x264-params", "colorprim=bt709:transfer=bt709:colormatrix=bt709", "-c:a", "copy", "-movflags", "+faststart", target])
             reports.append(verify_video(target, expected_duration=duration, expected_audio=has_audio)); staged.append(target)
         # Publish only after every requested video has passed validation.
         for temp_path, final_path, report in zip(staged, destinations, reports):

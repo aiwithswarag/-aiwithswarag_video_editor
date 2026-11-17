@@ -193,7 +193,7 @@ def render(source, destination, effects, *, width=1080, fps=None, stills=None, o
             enc = subprocess.Popen([executable("ffmpeg"), "-nostdin", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24",
                                     "-s", f"{W}x{H}", "-r", str(rate), "-i", "-", "-i", str(source),
                                     "-map", "0:v:0", "-map", "1:a:0?", "-c:v", "libx264", "-crf", "17", "-preset", "medium",
-                                    "-vf", "scale=out_color_matrix=bt709", "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-c:a", "aac", "-b:a", "192k", "-af", "apad", "-shortest",
+                                    "-vf", "scale=out_color_matrix=bt709", "-pix_fmt", "yuv420p", "-x264-params", "colorprim=bt709:transfer=bt709:colormatrix=bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-c:a", "aac", "-b:a", "192k", "-af", "apad", "-shortest",
                                     "-movflags", "+faststart", str(partial)], stdin=subprocess.PIPE, stderr=error_file)
         print("Pass 2/2: rendering effects", flush=True)
         saved, frame_count = [], 0

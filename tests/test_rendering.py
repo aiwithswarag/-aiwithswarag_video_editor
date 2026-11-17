@@ -48,6 +48,8 @@ def test_complete_cut_caption_audio_pipeline(clip,tmp_path):
     assert output.is_file() and report['caption_words']==2
     assert abs(probe(output)['duration']-2)<.12
     assert probe(output)['audio']
+    video=probe(output)['raw']['streams'][0]
+    assert all(video.get(key)=='bt709' for key in ('color_space','color_transfer','color_primaries'))
     timed=json.loads(output.with_suffix('.words.json').read_text())['words']
     assert timed[1]['s']==pytest.approx(1.2)
     with pytest.raises(FileExistsError): edit({'input':str(clip),'output':str(output)})
@@ -76,6 +78,7 @@ def test_silent_video_and_padded_social_export(tmp_path):
     assert not probe(output)['audio']
     exported=probe(tmp_path/'finished_square.mp4')
     assert (exported['width'],exported['height'])==(1080,1080)
+    assert exported['color_transfer']=='bt709'
 
 
 def test_music_and_sfx_mix_runs(clip,tmp_path):
